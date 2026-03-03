@@ -1,0 +1,10 @@
+# Ignore data, text and archive files
+*.root
+*.tar.gz
+runningEnvironment.txt
+
+# Ignore system specific folders
+test
+virtualEnvironment
+oldExamples
+energyEnergyCorrelatorHepData
