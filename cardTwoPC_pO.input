@@ -1,0 +1,25 @@
+# ======================================================================
+# Configuration card for Two-Particle Correlation (2PC) Analysis - pO
+# ======================================================================
+
+# Output Configuration
+OutputFileName twopc_results_pO.root
+
+# Data type (0 = pO, usado para la clase base ForestReader)
+DataType 0  
+
+# Event Selection
+ZVertexCut 15.0             # Maximum |vz| value for accepted events
+
+# Track Kinematic Cuts
+MinTrackPtCut 0.3           # Minimum track pT (GeV/c)
+MaxTrackPtCut 3.0           # Maximum track pT (GeV/c)
+TrackEtaCut 2.4             # Region in |eta| from which tracks are accepted
+
+# Track Quality Cuts (CMS standard)
+HighPurity 1                # 1 = Require CMS High Purity flag, 0 = Do not require
+MaxTrackPtRelativeError 0.1 # Maximum allowed (pT_error / pT)
+VertexMaxDistance 3.0       # Maximum distance in terms of error (dz/dzErr and dxy/dxyErr)
+
+# Event Mixing Configuration
+MixingDepth 40              # Number of past events to keep in the buffer for background

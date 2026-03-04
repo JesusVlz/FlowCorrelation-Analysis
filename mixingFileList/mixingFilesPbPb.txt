@@ -1,2 +1,0 @@
-data/HiForestAOD_PbPbData2018_minimumBias_35.root
-data/HiForestAOD_PbPbData2018_minimumBias_69.root

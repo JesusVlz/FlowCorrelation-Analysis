@@ -1,81 +1,34 @@
-# Energy-energy correlators in PbPb and pp collisions
+# Two-Particle Correlations in pO Collisions
 
-## Producing final plots
+This repository contains a lightweight, streamlined framework for analyzing two-particle correlations (2PC) in proton-Oxygen (pO) collisions at the LHC using CMS HiForest ROOT files. It is designed to extract $\Delta\eta-\Delta\phi$ 2D correlation histograms, perform event mixing for background subtraction, and ultimately calculate flow coefficients ($v_2$, $v_3$).
 
-If you just want to generate all the plots that are in the paper, you can use the script `makeAllPaperPlots.sh` provided you have access to all necessary data files. Contact Jussi Viinikainen to get these files.
+## General structure of the repository
 
-## General structure of the reposity
-
-The code is organized in folders, with different functionality in different folders. Below is a quick overview of this folder structure.
+The codebase has been highly optimized and stripped of legacy jet and unfolding dependencies. Below is a quick overview of the folder structure:
 
 **Home folder**
-
-This folder contains helpful processing scripts, together with a Makefile that compiles the code in the `src` folder that calculates the energy-energy correlators. Also the main program for the analysis, `eecAnalysis.cxx`, is located in this folder.
+Contains the main C++ executable `twopcAnalysis.cxx` and the `Makefile` to compile the framework. It also houses the main configuration cards (e.g., `cardTwoPC.input`) where kinematic cuts and analysis parameters are defined.
 
 **src**
+The core C++ classes that drive the analysis:
+* `HighForestReader` / `ForestReader`: Streamlined readers to load only the strictly necessary variables (Tracks, Vertex Z) from CMS HiForest files, ensuring fast execution.
+* `TwoParticleCorrelationAnalyzer`: Contains the main event loop, track selection, same-event (Signal) pairs calculation, and the buffer logic for mixed-event (Background) pairs.
+* `ConfigurationCard`: A flexible parser to read text-based input cards.
 
-The code that calculates the energy-energy correlators is located in this folder.
+**macros / plotting**
+Code that does post-processing of the output ROOT files. It includes macros to calculate the Signal/Background ratio ($S/B$), apply the ZYAM (Zero Yield At Minimum) procedure, and fit the 1D $\Delta\phi$ projections with Fourier series to extract $V_{n\Delta}$ coefficients.
 
-**plotting**
 
-Code that does post-processing for energy-energy correlator distributions and different plotting macros are located in this folder.
-
-**crab**
-
-The configuration to run the code on crab can be found from this folder.
-
-**jetEnergyCorrections**
-
-The jet energy corrections applied in this analysis are read from this folder.
-
-**smearingFiles**
-
-This folder contains particle level response matrices that can be used to smear the DeltaR values or energy weights to show the effect of detector resolution.
-
-**trackCorrectionTables**
-
-Corrections for tracks are read from the correction tables located in this folder.
-
-**mixingFileList**
-
-This folder contains file lists for the files from which the mixed events are read.
-
-**skimmer**
-
-This folder contains code to skim the minimum bias files from which the mixed events are read, leaving only bare minimum amount of information to perform the mixing. This greatly enhances the performance of the mixing.
-
-**toySimulation**
-
-Files to perform a toy simulation to study how energy-energy correlators look in completely uniform particle distribution.
+---
 
 ## Overview of basic workflow
 
-1. Test locally that everything works
+### 1. Test locally that everything works
 
-Before sending any code to GRID processing, you should check that the code compiles and produces the histograms you want. First, compile the code
+Before sending any code to GRID processing, you should check that the code compiles and runs successfully on a local test file.
 
-```
+First, compile the framework. The Makefile is configured to link ROOT libraries automatically:
+```bash
+make clean
 make
-```
-
-Then, you should check that the desired running configuration is in a card file. Wheck this with
-
-```
-vim cardEECPbPb.input
-```
-
-Newxt, run the code and see that the histograms you want are filled. Executing the main program without parameters tells you which parameters you need to give to it in order to run it.
-
-```
-./eecAnalysis
-```
-
-Once you have tested that everything works locally, it is time to run over larger datasets on CRAB.
-
-2. Run the jobs on CRAB
-
-For CRAB running, you will need a CMSSW area in your `lxplus` account. Any version will do, since no CMSSW functionality besised the CRAB job submitter will be used. Once you have a CMSSW area set up, copy the analysis code there and run it following the instructions in the `crab` folder in this repository. Once the jobs are finished, merge and download the produced root files.
-
-3. Post-process the downloaded files
-
-There are several post-processing steps before you can get the final energy-energy correlator distributions.
+./twopcAnalysis cardTwoPC_pO.input HiForestMiniAOD_pO.root

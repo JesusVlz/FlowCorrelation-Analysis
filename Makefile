@@ -1,4 +1,4 @@
-PROGRAM       = eecAnalysis
+PROGRAM       = twopcAnalysis
 
 version       = development
 CXX           = g++
@@ -15,7 +15,7 @@ LDFLAGS  += $(shell root-config --libs)
         
 # Use the following form if you have classes inherint TObject
 # HDRS += $(HDRSDICT) src/Class.h ... nanoDict.h       
-HDRS += src/ForestReader.h src/HighForestReader.h src/GeneratorLevelForestReader.h src/UnfoldingForestReader.h src/EECHistograms.h src/EECAnalyzer.h src/ConfigurationCard.h src/JetCorrector.h src/JetUncertainty.h src/trackingEfficiency2018PbPb.h src/trackingEfficiency2017pp.h src/trackingEfficiency2016pPb.h src/TrackingEfficiencyInterface.h src/BinningCard.h src/TrackPairEfficiencyCorrector.h src/SmearingProvider.h src/JetMetScalingFactorManager.h src/CovarianceHelper.h
+HDRS = src/ConfigurationCard.h src/ForestReader.h src/HighForestReader.h src/TwoParticleCorrelationAnalyzer.h
 
 SRCS = $(HDRS:.h=.cxx)
 OBJS = $(HDRS:.h=.o)
@@ -23,9 +23,9 @@ OBJS = $(HDRS:.h=.o)
 all:            $(PROGRAM)
 
 $(PROGRAM):     $(OBJS) $(PROGRAM).cxx
-		@echo "Linking $(PROGRAM) ..."
-		$(CXX) -lEG -L$(PWD) $(PROGRAM).cxx $(CXXFLAGS) $(OBJS) $(LDFLAGS) -o $(PROGRAM)
-		@echo "done"
+	@echo "Linking $(PROGRAM) ..."
+	$(CXX) -lEG -L$(PWD) $(PROGRAM).cxx $(CXXFLAGS) $(OBJS) $(LDFLAGS) -o $(PROGRAM)
+	@echo "done"
 
 %.cxx:
 
@@ -39,12 +39,12 @@ $(PROGRAM):     $(OBJS) $(PROGRAM).cxx
 
 # If dictionaries built, need to clean also them: *Dict*
 clean:
-		rm -rf $(OBJS) $(PROGRAM).o *.dSYM $(PROGRAM)
+	rm -rf $(OBJS) $(PROGRAM).o *.dSYM $(PROGRAM)
 
 cl:  clean $(PROGRAM)
 
 # Dictionary is needed for all classes inheriting TObject from root
 # nanoDict.cc: $(HDRSDICT)
-#		@echo "Generating dictionary ..."
-#		@rm -f nanoDict.cc nanoDict.hh nanoDict.h
-#		@rootcling nanoDict.cc -c -D$(version) $(HDRSDICT)
+#       @echo "Generating dictionary ..."
+#       @rm -f nanoDict.cc nanoDict.hh nanoDict.h
+#       @rootcling nanoDict.cc -c -D$(version) $(HDRSDICT)
